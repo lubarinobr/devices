@@ -1,6 +1,6 @@
 package com.devices.controller;
 
-import com.devices.FindOperation;
+import com.devices.enums.FindOperation;
 import com.devices.dto.DeviceResponse;
 import com.devices.service.IDeviceService;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/devices")

@@ -1,4 +1,4 @@
-package com.devices;
+package com.devices.enums;
 
 public enum FindOperation {
     ID("id"),
