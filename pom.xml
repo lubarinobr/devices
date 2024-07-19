@@ -66,6 +66,13 @@
 			<version>1.18.34</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.java-json-tools/json-patch -->
+		<dependency>
+			<groupId>com.github.java-json-tools</groupId>
+			<artifactId>json-patch</artifactId>
+			<version>1.13</version>
+		</dependency>
+
 
 	</dependencies>
 

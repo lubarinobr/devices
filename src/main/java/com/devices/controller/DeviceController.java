@@ -1,19 +1,23 @@
 package com.devices.controller;
 
+import com.devices.dto.DeviceCreationRequest;
 import com.devices.enums.FindOperation;
 import com.devices.dto.DeviceResponse;
 import com.devices.service.IDeviceService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Map;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("/devices")
@@ -37,10 +41,23 @@ public class DeviceController {
 
         Page<DeviceResponse> responsePage = switch (findOperation) {
             case FindOperation.ID -> deviceService.findById(Integer.parseInt(searchParameters.get(findOperation.getOperator())), pageable);
-            case FindOperation.BRAND -> deviceService.searchByBrand(searchParameters.get(findOperation.getOperator()), pageable);
-            default -> deviceService.getAllDevices(pageable);
+            case FindOperation.BRAND -> deviceService.findByBrand(searchParameters.get(findOperation.getOperator()), pageable);
+            default -> deviceService.findAll(pageable);
         };
 
         return ResponseEntity.ok(responsePage);
+    }
+
+    @PostMapping
+    public ResponseEntity<DeviceResponse> save(@Valid @RequestBody DeviceCreationRequest request) {
+        final DeviceResponse deviceResponse = deviceService.addDevice(request);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .queryParam("id", deviceResponse.getId())
+                .buildAndExpand(deviceResponse.getId())
+                .toUri();
+
+        return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, location.toString()).body(deviceResponse);
     }
 }

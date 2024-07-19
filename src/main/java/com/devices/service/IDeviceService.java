@@ -8,9 +8,9 @@ import org.springframework.data.domain.Pageable;
 public interface IDeviceService {
 
     public DeviceResponse addDevice(DeviceCreationRequest request);
-    public Page<DeviceResponse> getAllDevices(Pageable pageable);
+    public Page<DeviceResponse> findAll(Pageable pageable);
     public Page<DeviceResponse> findById(Integer id, Pageable pageable);
     public void deleteById(Integer id);
-    public Page<DeviceResponse> searchByBrand(String brand, Pageable pageable);
+    public Page<DeviceResponse> findByBrand(String brand, Pageable pageable);
 
 }

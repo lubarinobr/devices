@@ -23,7 +23,7 @@ public class DeviceService implements IDeviceService {
     }
 
     @Override
-    public Page<DeviceResponse> getAllDevices(Pageable pageable) {
+    public Page<DeviceResponse> findAll(Pageable pageable) {
         return deviceRepository.findAll(pageable).map(DeviceResponse::build);
     }
 
@@ -38,7 +38,7 @@ public class DeviceService implements IDeviceService {
     }
 
     @Override
-    public Page<DeviceResponse> searchByBrand(String brand, Pageable pageable) {
+    public Page<DeviceResponse> findByBrand(String brand, Pageable pageable) {
         return deviceRepository.findByBrand(brand, pageable).map(DeviceResponse::build);
     }
 }
