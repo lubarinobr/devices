@@ -1,5 +1,6 @@
 package com.devices.dto;
 
+import com.devices.entities.Device;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -24,5 +25,8 @@ public class DeviceResponse {
     @JsonFormat(pattern = "dd/MM/yyyy'T'hh:mm:ss")
     private LocalDateTime creationTime;
 
+    public static DeviceResponse build(Device device) {
+        return new DeviceResponse(device.getId(), device.getBrand(), device.getName(), device.getCreation());
+    }
 
 }

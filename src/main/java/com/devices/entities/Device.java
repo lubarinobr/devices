@@ -22,4 +22,9 @@ public class Device {
     private LocalDateTime creation = LocalDateTime.now();
 
     private Device() {}
+
+    public Device(String name, String brand) {
+        this.name = name;
+        this.brand = brand;
+    }
 }
