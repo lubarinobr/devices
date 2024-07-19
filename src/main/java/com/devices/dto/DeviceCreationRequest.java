@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DeviceCreationRequest{
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "is required")
     String name;
-    @NotBlank(message = "brand is required")
+    @NotBlank(message = "is required")
     String brand;
 
     public Device build() {

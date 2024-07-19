@@ -40,8 +40,8 @@ public class DeviceControllerTest {
 
     @Test
     @DisplayName("Given a empty search criteria should return all")
-    public void testSearchAll() {
-        deviceController.findDeviceByParam(new HashMap<>());
+    public void testSearchAll() throws Exception {
+        deviceController.findDeviceByParam(null, new HashMap<>());
         verify(deviceService, times(1)).findAll(any());
         verify(deviceService, times(0)).findById(any(), any());
         verify(deviceService, times(0)).findByBrand(any(), any());
@@ -49,8 +49,8 @@ public class DeviceControllerTest {
 
     @Test
     @DisplayName("Given an id as search criteria should return by ID")
-    public void testSearchById() {
-        deviceController.findDeviceByParam(Map.of("id", "1"));
+    public void testSearchById() throws Exception {
+        deviceController.findDeviceByParam(1, new HashMap<>());
         verify(deviceService, times(1)).findById(any(), any());
         verify(deviceService, times(0)).findAll(any());
         verify(deviceService, times(0)).findByBrand(any(), any());
@@ -58,8 +58,8 @@ public class DeviceControllerTest {
 
     @Test
     @DisplayName("Given a brand as search criteria should return by Brand")
-    public void testSearchByBrand() {
-        deviceController.findDeviceByParam(Map.of("brand", "test"));
+    public void testSearchByBrand() throws Exception {
+        deviceController.findDeviceByParam(null, Map.of("brand", "test"));
         verify(deviceService, times(1)).findByBrand(any(), any());
         verify(deviceService, times(0)).findById(any(), any());
         verify(deviceService, times(0)).findAll(any());
@@ -67,8 +67,8 @@ public class DeviceControllerTest {
 
     @Test
     @DisplayName("Given a unmapped attribute as search criteria should be ignored and return all")
-    public void testSearchUnmapped() {
-        deviceController.findDeviceByParam(Map.of("xpto", "test"));
+    public void testSearchUnmapped() throws Exception {
+        deviceController.findDeviceByParam(null, Map.of("xpto", "test"));
         verify(deviceService, times(1)).findAll(any());
         verify(deviceService, times(0)).findByBrand(any(), any());
         verify(deviceService, times(0)).findById(any(), any());

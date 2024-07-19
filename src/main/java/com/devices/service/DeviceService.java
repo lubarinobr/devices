@@ -3,10 +3,13 @@ package com.devices.service;
 import com.devices.dto.DeviceCreationRequest;
 import com.devices.dto.DeviceResponse;
 import com.devices.entities.Device;
+import com.devices.exception.DeviceNotFoundException;
 import com.devices.repository.DeviceRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -47,8 +50,8 @@ public class DeviceService implements IDeviceService {
     }
 
     @Override
-    public DeviceResponse update(Integer id, DeviceCreationRequest request) throws Exception {
-        Device device = deviceRepository.findById(id).orElseThrow(() -> new Exception("Not found"));
+    public DeviceResponse update(Integer id, DeviceCreationRequest request) throws DeviceNotFoundException {
+        Device device = deviceRepository.findById(id).orElseThrow(() -> new DeviceNotFoundException("Not found"));
         device.setBrand(request.getBrand());
         device.setName(request.getName());
         deviceRepository.save(device);
@@ -57,9 +60,10 @@ public class DeviceService implements IDeviceService {
 
     @Override
     public DeviceResponse updatePartial(Integer id, JsonPatch patch) throws Exception {
-        Device device = deviceRepository.findById(id).orElseThrow(() -> new Exception("Not found"));
+        Device device = deviceRepository.findById(id).orElseThrow(() -> new DeviceNotFoundException("Not found"));
         JsonNode updatedJson = patch.apply(objectMapper.convertValue(device, JsonNode.class));
         Device updateEntity = objectMapper.treeToValue(updatedJson, Device.class);
+        deviceRepository.save(updateEntity);
         return DeviceResponse.build(updateEntity);
     }
 }

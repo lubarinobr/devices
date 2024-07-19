@@ -3,6 +3,7 @@ package com.devices.controller;
 import com.devices.dto.DeviceCreationRequest;
 import com.devices.enums.FindOperation;
 import com.devices.dto.DeviceResponse;
+import com.devices.exception.DeviceNotFoundException;
 import com.devices.service.IDeviceService;
 import com.github.fge.jsonpatch.JsonPatch;
 import jakarta.validation.Valid;
@@ -30,7 +31,7 @@ public class DeviceController {
 
     @GetMapping(path = {"", "/{id}"})
     public ResponseEntity<Page<DeviceResponse>> findDeviceByParam(
-            @PathVariable(value = "field", required = false) Integer id,
+            @PathVariable(value = "id", required = false) Integer id,
             @RequestParam Map<String, String> searchParameters
     ) throws Exception {
 
@@ -82,7 +83,7 @@ public class DeviceController {
     public ResponseEntity<DeviceResponse> updateEntity(
             @PathVariable(value = "id") Integer id,
             @Valid @RequestBody DeviceCreationRequest request
-    ) throws Exception {
+    ) throws DeviceNotFoundException {
         DeviceResponse response = deviceService.update(id, request);
         return ResponseEntity.ok(response);
     }

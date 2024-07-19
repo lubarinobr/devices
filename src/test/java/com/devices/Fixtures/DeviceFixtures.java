@@ -12,6 +12,10 @@ public class DeviceFixtures {
         return new DeviceCreationRequest();
     }
 
+    public static DeviceCreationRequest createNewDeviceRequest(String name, String brand) {
+        return new DeviceCreationRequest(name, brand);
+    }
+
     public static DeviceCreationRequest updateRequestDevice() {
         return new DeviceCreationRequest("update", "update");
     }
