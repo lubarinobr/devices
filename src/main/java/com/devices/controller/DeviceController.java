@@ -4,6 +4,7 @@ import com.devices.dto.DeviceCreationRequest;
 import com.devices.enums.FindOperation;
 import com.devices.dto.DeviceResponse;
 import com.devices.service.IDeviceService;
+import com.github.fge.jsonpatch.JsonPatch;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -59,5 +60,29 @@ public class DeviceController {
                 .toUri();
 
         return ResponseEntity.status(CREATED).header(HttpHeaders.LOCATION, location.toString()).body(deviceResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable(value = "id") Integer id) {
+        deviceService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DeviceResponse> updateEntity(
+            @PathVariable(value = "id") Integer id,
+            @Valid @RequestBody DeviceCreationRequest request
+    ) throws Exception {
+        DeviceResponse response = deviceService.update(id, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<DeviceResponse> updatePartial(
+            @PathVariable(value = "id") Integer id,
+            @RequestBody JsonPatch patch
+    ) throws Exception {
+        DeviceResponse response = deviceService.updatePartial(id, patch);
+        return ResponseEntity.ok(response);
     }
 }

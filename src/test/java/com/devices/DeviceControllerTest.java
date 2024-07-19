@@ -74,8 +74,8 @@ public class DeviceControllerTest {
     }
 
     @Test
-    @DisplayName("Given a valid request should call the service to save it")
-    public void testAddNewUser() {
+    @DisplayName("Given a valid request body should call the service to save it")
+    public void testAddNewDevice() {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(httpServletRequest));
         DeviceCreationRequest request = new DeviceCreationRequest();
         when(deviceService.addDevice(request))
@@ -86,5 +86,27 @@ public class DeviceControllerTest {
         assertThat(response.getHeaders(), hasKey("Location"));
         assertThat(response.getHeaders().getLocation().toString(), containsString("?id=1"));
         verify(deviceService, times(1)).addDevice(request);
+    }
+
+    @Test
+    @DisplayName("Given a valid id should call the service to delete it")
+    public void testDeleteDevice() {
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(httpServletRequest));
+        ResponseEntity<Void> response = deviceController.deleteById(1);
+        assertThat(response.getStatusCode().value(), CoreMatchers.equalTo(HttpStatus.OK.value()));
+        verify(deviceService, times(1)).deleteById(1);
+    }
+
+    @Test
+    @DisplayName("Given a valid request should call the service to update the entity")
+    public void testUpdateDevice() throws Exception {
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(httpServletRequest));
+        DeviceCreationRequest request = new DeviceCreationRequest();
+        when(deviceService.update(1, request))
+                .thenReturn(new DeviceResponse(1, "test", "test", LocalDateTime.now()));
+
+        ResponseEntity<DeviceResponse> response = deviceController.updateEntity(1, request);
+        assertThat(response.getStatusCode().value(), CoreMatchers.equalTo(HttpStatus.OK.value()));
+        verify(deviceService, times(1)).update(1, request);
     }
 }
