@@ -6,6 +6,8 @@ import com.devices.dto.DeviceResponse;
 import com.devices.exception.DeviceNotFoundException;
 import com.devices.service.IDeviceService;
 import com.github.fge.jsonpatch.JsonPatch;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,10 +31,12 @@ public class DeviceController {
     private final IDeviceService deviceService;
 
 
+    @Operation(summary = "Find Device",
+    description = "You can send as parameter the values: {brand, page and size}")
     @GetMapping(path = {"", "/{id}"})
     public ResponseEntity<Page<DeviceResponse>> findDeviceByParam(
             @PathVariable(value = "id", required = false) Integer id,
-            @RequestParam Map<String, String> searchParameters
+            @RequestParam(required = false) Map<String, String> searchParameters
     ) throws Exception {
 
         final int page = Integer.parseInt(searchParameters.getOrDefault("page", "0"));

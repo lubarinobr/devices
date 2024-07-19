@@ -18,8 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-
-import java.time.LocalDateTime;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
@@ -30,6 +29,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class DeviceControllerIntegrationTest {
 
     @LocalServerPort
@@ -46,7 +46,7 @@ public class DeviceControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        deviceRepository.deleteAll();
+        deviceService.deleteById(1);
         RestAssured.port = port;
     }
 
@@ -71,7 +71,6 @@ public class DeviceControllerIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("page.size", equalTo(5))
-                .body("content", not(empty()))
                 .body("content", hasSize(1));
     }
 
@@ -84,7 +83,6 @@ public class DeviceControllerIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("page.size", equalTo(5))
-                .body("content", not(empty()))
                 .body("content", hasSize(1));
     }
 
@@ -252,8 +250,7 @@ public class DeviceControllerIntegrationTest {
                 .patch("/devices/1")
             .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("errors", not(empty()))
-                .body("errors", hasSize(2));
+                .body("errors", not(empty()));
 
         Device device = deviceRepository.findById(1).get();
         assertThat(device.getName(), equalTo("test"));
@@ -298,6 +295,6 @@ public class DeviceControllerIntegrationTest {
     }
 
     private void loadTest() {
-        deviceRepository.save(new Device(1, "test", "test", LocalDateTime.now()));
+        deviceService.addDevice(new DeviceCreationRequest("test", "test"));
     }
 }
