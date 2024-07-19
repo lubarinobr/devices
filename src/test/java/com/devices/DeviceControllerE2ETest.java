@@ -30,7 +30,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class DeviceControllerIntegrationTest {
+public class DeviceControllerE2ETest {
 
     @LocalServerPort
     private Integer port;
