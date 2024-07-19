@@ -1,17 +1,19 @@
 package com.devices.enums;
 
+import java.util.Arrays;
+
 public enum FindOperation {
     ID("id"),
     BRAND("brand"),
     EMPTY("");
 
-    private final String operator;
+    private final String name;
 
-    FindOperation(String operator) {
-        this.operator = operator;
+    FindOperation(String name) {
+        this.name = name;
     }
 
-    public String getOperator() {
-        return operator;
+    public String getName() {
+        return name;
     }
 }

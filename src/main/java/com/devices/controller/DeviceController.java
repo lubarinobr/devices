@@ -28,21 +28,31 @@ public class DeviceController {
     private final IDeviceService deviceService;
 
 
-    @GetMapping
-    public ResponseEntity<Page<DeviceResponse>> findDeviceByParam(@RequestParam Map<String, String> searchParameters)
-    {
+    @GetMapping(path = {"", "/{id}"})
+    public ResponseEntity<Page<DeviceResponse>> findDeviceByParam(
+            @PathVariable(value = "field", required = false) Integer id,
+            @RequestParam Map<String, String> searchParameters
+    ) throws Exception {
+
         final int page = Integer.parseInt(searchParameters.getOrDefault("page", "0"));
         final int size = Integer.parseInt(searchParameters.getOrDefault("size", "5"));
 
         final Pageable pageable = Pageable.ofSize(size).withPage(page);
 
-        final FindOperation findOperation = Arrays.stream(FindOperation.values())
-                .filter(name -> searchParameters.containsKey(name.getOperator()))
-                .findFirst().orElse(FindOperation.EMPTY);
+        FindOperation operator = null;
 
-        Page<DeviceResponse> responsePage = switch (findOperation) {
-            case FindOperation.ID -> deviceService.findById(Integer.parseInt(searchParameters.get(findOperation.getOperator())), pageable);
-            case FindOperation.BRAND -> deviceService.findByBrand(searchParameters.get(findOperation.getOperator()), pageable);
+        if (id != null) {
+            operator = FindOperation.ID;
+        } else {
+            operator = Arrays.stream(FindOperation.values())
+                .filter(name -> searchParameters.containsKey(name.getName()))
+                .findFirst().orElse(FindOperation.EMPTY);
+        }
+
+
+        Page<DeviceResponse> responsePage = switch (operator) {
+            case FindOperation.ID -> deviceService.findById(id, pageable);
+            case FindOperation.BRAND -> deviceService.findByBrand(searchParameters.get(operator.getName()), pageable);
             default -> deviceService.findAll(pageable);
         };
 

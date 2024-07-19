@@ -1,5 +1,6 @@
 package com.devices;
 
+import com.devices.Fixtures.DeviceFixtures;
 import com.devices.controller.DeviceController;
 import com.devices.dto.DeviceCreationRequest;
 import com.devices.dto.DeviceResponse;
@@ -77,9 +78,9 @@ public class DeviceControllerTest {
     @DisplayName("Given a valid request body should call the service to save it")
     public void testAddNewDevice() {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(httpServletRequest));
-        DeviceCreationRequest request = new DeviceCreationRequest();
+        DeviceCreationRequest request = DeviceFixtures.newDeviceCreationRequest();
         when(deviceService.addDevice(request))
-                .thenReturn(new DeviceResponse(1, "test", "test", LocalDateTime.now()));
+                .thenReturn(DeviceFixtures.deviceResponse());
 
         ResponseEntity<DeviceResponse> response = deviceController.save(request);
         assertThat(response.getStatusCode().value(), CoreMatchers.equalTo(HttpStatus.CREATED.value()));
@@ -103,7 +104,7 @@ public class DeviceControllerTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(httpServletRequest));
         DeviceCreationRequest request = new DeviceCreationRequest();
         when(deviceService.update(1, request))
-                .thenReturn(new DeviceResponse(1, "test", "test", LocalDateTime.now()));
+                .thenReturn(DeviceFixtures.deviceResponse());
 
         ResponseEntity<DeviceResponse> response = deviceController.updateEntity(1, request);
         assertThat(response.getStatusCode().value(), CoreMatchers.equalTo(HttpStatus.OK.value()));
